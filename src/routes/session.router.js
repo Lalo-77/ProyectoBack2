@@ -7,18 +7,28 @@ import jwt from "jsonwebtoken";
 const router = Router();
 
 router.post("/register", async (req, res) => {
-    const {usuario, password} = req.body;
+    const {first_name, last_name, email, password, age } = req.body;
 
     try {
-        const existeUsuario = await UsuarioModel.findOne({usuario});
+        const existeUsuario = await UsuarioModel.findOne({email: email});
+
         if(existeUsuario) {
-            return res.status(400).send("El usuario ya existe");
+            return res.status(400).send("El correo electronico ya esta registrado");
         }
 
         const nuevoUsuario = new UsuarioModel({
             usuario,
-            password: createHash(password)
-        })
+            frist_name: req.user.first_name,
+            last_name: req.user.last_name,
+            email: req.user.email,
+            password: createHash(password),
+            age: req.user.age,
+        });
+
+        req.session.user = {... nuevoUsuario._doc};
+        req.session.login = true;
+        resstatus(200).send("Usuario creado con exito");
+
         await nuevoUsuario.save();
 
         const token = jwt.sign({usuario: nuevoUsuario.usuario, rol: nuevoUsuario.rol}, "coderhouse", {expireIn:"1h"})
@@ -28,7 +38,7 @@ router.post("/register", async (req, res) => {
             httpOnly: true
         })
 
-        res.redirect("/api/sessions/home");
+        res.redirect("/products");
 
     } catch (error) {
          res.status(500).send("Error interno, no pudimos encontrar el usuario")
@@ -53,7 +63,7 @@ router.post("/login", async (req, res) => {
             maxAge: 3600000,
             httpOnly: true
         })
-        res.redirect("/api/sessions/home");
+        res.redirect("/api/products");
         
     } catch (error) {
         res.status(500).send("Error interno, no pudimos encontrar el usuario")

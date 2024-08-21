@@ -9,4 +9,7 @@ router.get("/register", (req, res) => {
     res.render("register");
 })
 
+router.get("/products", (req, res) => {
+    res.render("products");
+})
 export default router;
