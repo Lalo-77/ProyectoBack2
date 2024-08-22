@@ -1,6 +1,6 @@
 import { Router } from  "express";
 import UsuarioModel from "../models/usuarios.models.js";
-import { createHash, isValidPassword  } from "../util/util.js";
+import { createHash, isValidPassword  } from "../utils/utils.js";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 
@@ -18,11 +18,7 @@ router.post("/register", async (req, res) => {
 
         const nuevoUsuario = new UsuarioModel({
             usuario,
-            frist_name: req.user.first_name,
-            last_name: req.user.last_name,
-            email: req.user.email,
             password: createHash(password),
-            age: req.user.age,
         });
 
         req.session.user = {... nuevoUsuario._doc};
@@ -49,6 +45,7 @@ router.post("/login", async (req, res) => {
     const {usuario, password} = req.body
     try {
         const usuarioEncontrado = await UsuarioModel.findOne({usuario});
+        
         if(!usuarioEncontrado) {
             return res.status(401).send("Usuario no valido");
 
@@ -77,20 +74,31 @@ router.get("/current", passport.authenticate("jwt",{session: false}), (req, res)
         res.status(401).send("No autorizado");
     }
 })
+router.get("/productos", passport.authenticate("jwt",{session: false}),(req,res) => {
+    if(req.user) {
+       res.render("home", {user: req.user.user });
+    } else {
+        res.status(401).send("No esta autenticado, Token Invalido");
+    }
+});
 // Logout
-router.post("/logout", (req, res) => {
+router.post("/logout", async (req, res) => {
+const {email, pasword} =req.body
 
     res.clearCookie("coderCookieToken");
     res.redirect("/login");
 })
-// Ruta par admins
+router.get("/logout", (req, res) => {
+    res.clearCookie("coderCookieYoken");
+    res.redirect("/login");
+});
+
+// Ruta para admins
 router.get("/admin", passport.authenticate("jwt",{session:false}), (req, res) => {
     if(req.user.rol != "admin") {
         return res.status(403).send("Acceso denegado! ");
     }
     res.render("admin");
 })
-
-
 
 export default router;

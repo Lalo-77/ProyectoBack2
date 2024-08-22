@@ -12,4 +12,5 @@ router.get("/register", (req, res) => {
 router.get("/products", (req, res) => {
     res.render("products");
 })
+
 export default router;
