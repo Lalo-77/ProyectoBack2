@@ -1,4 +1,5 @@
-app.get("/user", (req, res) => {
+
+user.get("/user", (req, res) => {
     if(req.session.usuario) {
             return res.send(`El usuario registrado es el siguiente: ${req.session.usuario}`);
         }
@@ -6,7 +7,7 @@ app.get("/user", (req, res) => {
         res.send("No tenemos un usuario registrado con ese nombre");
     })
     
-    app.listen(PUERTO, () => {
+    user.listen(PUERTO, () => {
         console.log(`Escuchando em el puerto ${PUERTO}`);
         
     })
