@@ -30,7 +30,7 @@ router.get("/profile", (req, res) => {
 });
 
 // Enviamos al usuario a la vista de productos:
-router.get("/products", async (req, res) => {
+/*router.get("/products", async (req, res) => {
     try {
         const { page = 1, limit = 2 } = req.query;
         const productos = await productManager.getProducts({
@@ -54,6 +54,6 @@ router.get("/products", async (req, res) => {
             error: "Error interno del servidor"
         });
     }
-});
+});*/
 
 export default router;

@@ -1,0 +1,82 @@
+[
+    {
+    "title": "Kit accesorios Lady",
+    "price": 15900,
+    "description":"Marca LadyCar, Modelo Women Personaje Rosa, Nombre del diseño: Mujer, Unidades por envase: 5,cubre palanca, cubre espejo, cubre volante: 38 cm de diámetro (medida exterior del volante), Material: simil cuero, tamaño: Universal",
+    "category": "decoracion",
+    "image":"../img/kit accesorios auto.webp",
+    "stock":30
+    },
+    {
+    "title":"Moldura para Interior",
+    "price": 2550,
+    "description":"Nombre del diseño:kitvolantefix, MOLDURA: Chevrolet, Ford, Nissan, Vw, Renault, Peugeot, Audi, BMW, Mercedes Benz, Toyota, Jeep, Alfa Romeo, lifan, Geely, Honda, fiat,Modelo: Universal fix,Unidades por envase: 1",
+    "category": "decoracion",
+    "image":"../img/moldura para interior.webp",
+    "stock":30
+    },
+    {
+    "title":" Juego de Alfombra",
+    "price": 19949,
+    "description":"marca: DelMoro,modelo: tx2020,Tipo de producto para AutoTipo de vehículo Auto, Camioneta, Cantidad de piezas: 3,material: Goma,color: negro",
+    "category": "decoracion",
+    "image":"../img/juego de alfombra.webp",
+    "stock":30
+    },
+    {
+    "title":"Luces Leds",
+    "price": 39700,
+    "description":"cantidad:2,color: verde,azul,impermeable: a prueba de golpes, alimentación con 3 baterías AG10, tamaño: 7cm x 1,7 cm x 1,7 cm.",
+    "category": "decoracion",
+    "image":"../../public/img/Luces Leds.jpg",
+    "stock":30
+    },
+    {
+    "title":"Cubre Zocalo",
+    "price":2990,
+    "description":"cubre zocalo Carbono Ford focus 3 logo resinado,Marca: Ford, material: Vinilo Simil Carbono Negro, Juego de 4 cubre zocalos vinilicos, Autoadhesivas, evita rayones y protege la pintura original,los cubre zócalos de BSK Argentina,las insignias son resinadas a color con adhesivos 3M (MADE IN GERMANY), de gran pegamento y durabilidad. Ambos hacen que tu auto esté protegido tanto al bajar como al subir y dan un aspecto detallado de tu vehículo, manteniendo la linea original sin agregados visualmente agresivos",
+    "category":"proteccion",
+    "image":"../img/cubre zocalo.webp",
+    "stock":30
+    },
+    {
+    "title":"Inflador Portatil",
+    "price": 42020,
+    "description":"Marca:Dialsec, Modelo:DH03usb, Accesorios incluidos:Si, Función de desinflar:No, Certificación: CE Voltaje: 12V Presión Max: 101-150Psi, Modelo: dh03usb, Tipo: wireless con batería de 6000mah, Aplicación: Autos, Moto, Bicicleta, Pelota Diámetro del cilindro: Cilindro 15 Corriente Max: 12v 2A, Color: Negro, Unidades de presión para seleccionar: BAR, PSI, KPA, Power: 65W, Tamaño: 21X15X6 cm, Peso: 1.300 kg",
+    "category":"proteccion",
+    "image":"../img/inflador portaril.jpg",
+    "stock":30
+    },
+    {
+    "title":"Juego Tazas Ruedas",
+    "price":16970,
+    "description": "tazas decorativas,marca: safari, medida: 12,colores: varios,cantidad: 4",
+    "category":"decoracion",
+    "image":"../img/tazas decorativas.webp",
+    "stock":30
+    },
+    {
+    "title":"Cepillo con Mango",
+    "price":2900,
+    "description":"cepillo limpieza,marca: eshoop Bessia,material:microfibra maxima limpieza premium, cantidad 1, talle: xl, Remueve polvo y demás suciedades. - Esperamos poder verlo pronto en nuestro establecimiento. Estamos en el predio de Carrefour Barrio Jardin, de lunes a domingos de 8,30 a 22hs. . Ofrecemos servicio de Gomeria, Bateria, Lubricentro, Tren Delantero, Amortiguadores, Frenos, Audio",
+    "category":"limpieza",
+    "image":"../img/cepillo con mango.webp",
+    "stock":30
+    },
+    {
+    "title":"Manopla para Limpieza",
+    "price":2700,
+    "description":"Laffite guante con rastas de microfibra, material: microfibra, marca:fibralimp, piezas:1, color: verde, rojo ,gris.Ideal para vehículo, motos o el hogar,las rastas largas las cuales atrapan el polvo minimizando riesgo de rayado, evita las marcas de agua,barre con la suciedad sin rayar las superficies,contiene puño elastizado muy reforzado, No deja rastros, ni emite pelusas, sino que también lo hace sin dañar la pintura.Ideal para lavado premium.",
+    "category":"limpieza", 
+    "image":"../img/manopla lavado.webp",
+    "stock":30
+    },
+    {
+    "title":"Gancho para Remolque",
+    "price":10000,
+    "description":"gancho remolque: delantero, trasero, marca:BENEN, material: acero reforzado, color: rojo, azul, cromado",
+    "category":"accesorios",
+    "image":"../img/gancho remolque.jpg",
+    "stock":30
+    }
+    ]

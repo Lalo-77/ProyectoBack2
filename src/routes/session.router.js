@@ -5,69 +5,49 @@ import passport from "passport";
 
 const router = Router(); 
 
-router.post("/register", async (req, res) => {
-    const { first_name, last_name, email, password, age } = req.body;
+// VERSION DE REGISTER CON PASSPORT
 
-    try {
-
-        const existeUser = await UserModel.findOne({email: email});
-
-        if(existeUser) {
-            return res.status(400).send("El correo electronico ya esta registrado");
+router.post("/register", passport.authenticate("register", {
+    failureRedirect: "/failedregister"}), async (req, res) => {
+        req.session.user = {
+            first_name: req.user.first_name,
+            last_name: req.user.last_name,
+            age: req.userage,
+            email: req.user.email
         }
-        const nuevoUser = await UserModel.create({
-            first_name,
-            last_name, 
-            email, 
-            password: createHash(password),
-            age
-        });
-
-        req.session.user = {...nuevoUser._doc};
         req.session.login = true;
-
-        res.status(200).send("Usuario creado con exito");
-
-        // Generar el token de JWT:
-  const token = jwt.sign({usuario: nuevoUsuario.usuario, rol: nuevoUsuario.rol},
-    "coderhouse", { expiresIn: "1h"});
-    
-        // Generamos la cookie:
-        res.cookie("coderCookieToken", token, {
-        maxAge: 3600000, //1 hora de vida
-        httpOnly: true // recuerdo que esto es para que solo sea accesible mediante peticiones http.
+        res.redirect("/profile");
+    });
+    router.get("/failureRegister", (req, res) => {
+        res.send("Registro fallido");
     })
-    } catch (error) {
-        res.status(500).send("Error interno");
+
+// VERSION DEL LOGIN CON PASSPORT
+
+router.post("/login", passport.authenticate("login", {
+    failureRedirect: "/api/session/faillogin"
+}), async (req, res) => {
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.userage,
+        email: req.user.email
     }
+
+    req.session.login = true;
+
+    res.redirect("/profile");
 })
-
-// Login :
-router.post("/login", async (req, res) => {
-    const {email, password} = req.body; // viene del body
-    
-    try {
-        const usuario = await UserModel.findOne({email: email});
-
-        if(usuario) {
-            if (isValidPassword ( password, usuario )) {
-                req.session.user = {
-                    email: usuario.email,
-                    age: usuario.age,
-                    first_name: usuario.first_name,
-                    last_name: usuario.last_name,
-                } 
-                req.session.login = true;
-                res.redirect("/profile");
-            } else {
-                res.status(401).send("Password incorrecto");
-            }
-        } else {
-            res.status(404).send("Usuario no encontrado");
-        }
-    } catch (error) {
-        res.status(500).send("Error interno por un ruso infiltrado");
-    }
+router.get("/faillogin", async (req, res) => {
+    req.send("Fallo el login");
+})
+// SEREALIZAR Y DESEREALIZAR
+passport.serializeUser((user, done) => {
+    done(null, user._id);
+})
+passport.deserializeUser(async (id, done) => {
+    let user = await UserModel.findById({_id:id});
+    done(null, user);
 })
 // Logout 
 
@@ -78,13 +58,23 @@ router.get("/logout", (req, res) => {
     res.redirect("/login");
 })
 
+// login/registro a partir de GitHub
+
+router.get("/github", passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { })
+
+router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), async (req, res) => {
+    req.session.user = req.user;
+    req.session.login = true;
+    res.redirect("/profile");
+})
+
 // Ruta current
 router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
     if (req.user) {
         // Renderizamos una vista especial "home" con la info del usuario:
         res.render("home", { usuario: req.user.usuario });
     } else {
-        //Si no hay usuario asociado tiremos un error:
+        //Si no hay usuario asociado pongamos un error:
         res.status(401).send("No autorizado");
     }
 })
