@@ -26,6 +26,7 @@ const usuarioSchema = new mongoose.Schema({
         type: Number, 
         required: true
     },
+    //carId: {crearCarrito},
     rol: { 
         type: String,
         enum: ["admin","user"],
@@ -33,6 +34,6 @@ const usuarioSchema = new mongoose.Schema({
     }
 })
 
-const usuarioModel = mongoose.model("usuarios", usuarioSchema);
+const UsuarioModel = mongoose.model("usuarios", usuarioSchema);
 
-export default usuarioModel;
+export default UsuarioModel;

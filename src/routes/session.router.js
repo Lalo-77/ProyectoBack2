@@ -1,44 +1,53 @@
 import { Router } from "express";
 import passport from "passport";
 import userController from "../controllers/user.controller.js";
-import usuarioModel from "../models/usuarios.model.js";
+import UsuarioModel from "../models/usuarios.model.js";
 import { createHash, isValidPassword } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
 
-const router = Router(); 
+const router = Router();
+
+router.post("/register", async (req, res) => {
+    const { first_name, last_name, email, age, usuario, password } = req.body;
+
+    try {
+        const existeUsuario = await UsuarioModel.findOne({ usuario });
+
+        if (existeUsuario) {
+            return res.status(400).json({ error: "El usuario ya existe" });
+        }
+        const nuevoUsuario = new UsuarioModel({
+            first_name,
+            last_name,
+            email,
+            age,
+            usuario,
+            password: createHash(password)
+        });
+        await nuevoUsuario.save();
+
+        const token = jwt.sign(
+            { usuario: nuevoUsuario.usuario, rol: nuevoUsuario.rol },
+            "coderhouse",
+            { expiresIn: "1h" }
+        );
+        res.cookie("coderCookieToken", token, {
+            maxAge: 3600000,
+            httpOnly: true
+        });
+
+        return res.redirect("/api/session/current");
+    } catch (error) {
+        console.error("Error during registration:", error);
+        console.log(req.body);
+        return res.status(500).json({ error: "Error interno del servidor" });
+
+    }
+});
 
 // VERSION DE REGISTER CON PASSPORT
 
-/*router.post("/register", async (req, res) => {
-    const {usuario, password } = req.body;
-    try {
-        const existeUsuario = await usuarioModel.findOne({usuario});
-
-        if(existeUsuario) {
-            return res.status(400).send("El usuario ya existe");
-        }
-
-        const nuevoUsuario = new usuarioModel({
-            usuario,
-            password: createHash(password)
-        })
-
-        await nuevoUsuario.save();
-
-        const token = jwt.sign({usuario: nuevoUsuario.usuario, rol: nuevoUsuario.rol}, "coderhouse", {expireIn: "1h"});
-
-        res.cookie("coderCookieToken", token,{
-            maxAge: 3600000, 
-            httpOnly: true
-        })
-
-        res.redirect("/api/session/current");
-
-    } catch (error) {
-        res.status(500).send("Error interno");
-    }
-})*/
-router.post("/register", passport.authenticate("register", {
+/*router.post("/register", passport.authenticate("register", {
     failureRedirect: "/failedregister"}), async (req, res) => {
         req.session.user = {
             first_name: req.user.first_name,
@@ -51,7 +60,7 @@ router.post("/register", passport.authenticate("register", {
     });
     router.get("/failureRegister", (req, res) => {
         res.send("Registro fallido");
-    })
+    })*/
 
 // VERSION DEL LOGIN CON PASSPORT
 
@@ -77,7 +86,7 @@ passport.serializeUser((user, done) => {
     done(null, user._id);
 })
 passport.deserializeUser(async (id, done) => {
-    let user = await UserModel.findById({_id:id});
+    let user = await UsuarioModel.findById({ _id: id });
     done(null, user);
 })
 // Logout 
