@@ -36,8 +36,8 @@ app.use(cookieParser());
 app.use(express.static("./src/public"));
 
 // cambios con passport:
-initializePassport();
 app.use(passport.initialize());
+initializePassport();
 app.use(passport.session());
 
 //RUTAS

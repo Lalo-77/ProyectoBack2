@@ -1,18 +1,49 @@
 import { Router } from "express";
-import UserModel from "../models/user.model.js";
-import {createHash, isValidPassword } from "../utils/utils.js"
 import passport from "passport";
+import userController from "../controllers/user.controller.js";
+import usuarioModel from "../models/usuarios.model.js";
+import { createHash, isValidPassword } from "../utils/utils.js";
+import jwt from "jsonwebtoken";
 
 const router = Router(); 
 
 // VERSION DE REGISTER CON PASSPORT
 
+/*router.post("/register", async (req, res) => {
+    const {usuario, password } = req.body;
+    try {
+        const existeUsuario = await usuarioModel.findOne({usuario});
+
+        if(existeUsuario) {
+            return res.status(400).send("El usuario ya existe");
+        }
+
+        const nuevoUsuario = new usuarioModel({
+            usuario,
+            password: createHash(password)
+        })
+
+        await nuevoUsuario.save();
+
+        const token = jwt.sign({usuario: nuevoUsuario.usuario, rol: nuevoUsuario.rol}, "coderhouse", {expireIn: "1h"});
+
+        res.cookie("coderCookieToken", token,{
+            maxAge: 3600000, 
+            httpOnly: true
+        })
+
+        res.redirect("/api/session/current");
+
+    } catch (error) {
+        res.status(500).send("Error interno");
+    }
+})*/
 router.post("/register", passport.authenticate("register", {
     failureRedirect: "/failedregister"}), async (req, res) => {
         req.session.user = {
             first_name: req.user.first_name,
             last_name: req.user.last_name,
-            age: req.userage,
+            age: req.user.age,
             email: req.user.email
         }
         req.session.login = true;
@@ -30,7 +61,7 @@ router.post("/login", passport.authenticate("login", {
     req.session.user = {
         first_name: req.user.first_name,
         last_name: req.user.last_name,
-        age: req.userage,
+        age: req.user.age,
         email: req.user.email
     }
 
@@ -39,7 +70,7 @@ router.post("/login", passport.authenticate("login", {
     res.redirect("/profile");
 })
 router.get("/faillogin", async (req, res) => {
-    req.send("Fallo el login");
+    res.send("Fallo el login");
 })
 // SEREALIZAR Y DESEREALIZAR
 passport.serializeUser((user, done) => {
@@ -51,12 +82,8 @@ passport.deserializeUser(async (id, done) => {
 })
 // Logout 
 
-router.get("/logout", (req, res) => {
-    if (req.session.login){
-        req.session.destroy();
-    }
-    res.redirect("/login");
-})
+router.get("/logout", userController.logout);
+
 
 // login/registro a partir de GitHub
 
@@ -86,18 +113,10 @@ router.get("/productos", passport.authenticate("jwt", { session: false }), (req,
     }
 });
 
-// Ruta para admins
-router.get("/admin", passport.authenticate("jwt", { session: false }), (req, res) => {
-    if (req.user.rol != "admin") {
-        return res.status(403).send("Acceso denegado! ");
-    }
-    res.render("admin");
-})
-
 router.get("/session", (req, res) => {
     if (req.session.counter) {
         req.session.counter++;
-        req.session("Te damos la Bienvenida a nuestro sitio Web");
+        res.session("Te damos la Bienvenida a nuestro sitio Web");
     } else {
         req.session.counter = 1;
         req.send("Te damos la Bienida a nuestro sitio Web");

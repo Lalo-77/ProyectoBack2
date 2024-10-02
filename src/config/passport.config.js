@@ -1,41 +1,37 @@
 import passport from "passport";
 import local from "passport-local";
-import UserModel from "../models/user.model.js"
+import UserModel from "../models/usuarios.model.js"
 import { createHash, isValidPassword } from "../utils/utils.js";
-//import jwt from "passport-jwt";
+import jwt from "passport-jwt";
 import GitHubStrategy from "passport-github2";
 
 const LocalStrategy = local.Strategy;
 
 // Estrategia de passport
+const JWTStrategy = jwt.Strategy;
+const ExtractJwt = jwt.ExtractJwt;
 
 const initializePassport = () => {
-    //Register
-    passport.use("register", new LocalStrategy({
-        passReqToCallback: true,
-        usernameField: "email"
-        //El usuario sera el email que ya tengo registrado
-    }, async (req, username, password, done) => {
-        //guardo las datos que vienen del body
-        const { first_name, last_name, email, age } = req.body;
 
+    const cookieExtractor = req => {
+        let token = null;
+
+        if (req && req.cookies) {
+            token = req.cookies["coderCookieToken"];
+
+        }
+        return token;
+    }
+    
+    passport.use("jwt", new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: "coderhouse"
+
+    }, async (jwt_payload, done) => {
         try {
-            let user = await UserModel.findOne({ email: email });
-            if (user) return done(null, false);
-            //Si no existe voy a crear uno nuevo:
-            let newUser = {
-                first_name,
-                last_name,
-                email,
-                age,
-                password: createHash(password)
-            }
-
-            let result = await UserModel.create(newUser);
-            return done(null, result);
-
+            return done(null, jwt_payload);
         } catch (error) {
-            return done(error);
+            return done(error)
         }
     }))
 
@@ -44,7 +40,7 @@ const initializePassport = () => {
         usernameField: "email"
     }, async (email, password, done) => {
         try {
-            const user = await UserModel.findOne({ email:email });
+            const user = await UserModel.findOne({ email: email });
             if (!user) {
                 console.log("Este usuario no existe!!!");
                 return done(null, false);
@@ -76,9 +72,9 @@ const initializePassport = () => {
         clientSecret: "99dc45883470a03aecccf0f7187ac68700e470bb",
         callbackURL: "http://localhost:8080/api/session/githubcallback",
     }, async (accessToken, refreshToken, profile, done) => {
-     
+
         try {
-             //Algo que recomendamos: 
+            //Algo que recomendamos: 
             console.log("Profile: ", profile);
             let user = await UserModel.findOne({ email: profile._json.email });
 
@@ -105,7 +101,7 @@ const initializePassport = () => {
 
     }))
 
-    
+
 }
 
 export default initializePassport;
