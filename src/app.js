@@ -10,8 +10,7 @@ import cartsRouter from "./routes/carts.router.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import "./database.js";
-//import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 const app = express();
 const PUERTO = 8080;
@@ -22,8 +21,11 @@ app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
 //MIDDLEWARE
-app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.static("./src/public"));
+app.use(cookieParser());
+
 app.use(session({
     secret: "secretCoder",
     resave: true,
@@ -32,13 +34,11 @@ app.use(session({
         mongoUrl: "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/Login?retryWrites=true&w=majority&appName=Cluster0",
     }),
 }));
-app.use(cookieParser());
-app.use(express.static("./src/public"));
 
 // cambios con passport:
 app.use(passport.initialize());
-initializePassport();
 app.use(passport.session());
+initializePassport();
 
 //RUTAS
 
@@ -46,7 +46,11 @@ app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
 app.use("/api/products", productsRouter);
 app.use("/carts", cartsRouter);
-
+//Error 
+app.use((err, req, res, next) => {  
+    console.error(err.stack);  
+    res.status(500).send('Algo salió mal!');  
+});  
 app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto ${PUERTO}`); 
 })

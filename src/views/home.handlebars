@@ -1,4 +1,9 @@
-<h1> !! Bienvenido, {{usuario}} !!</h1>
-<form action="/api/session/logout " method="POST">
-      <button type="submit">Logout</button>
+<div>
+      <h1> !! Bienvenido, !!</h1>
+      <h3>Email: {{user.email}}</h3>
+      <h3>Rol: {{user.role}}</h3>
+</div>
+
+<form  class ="forulario-logout" action="/api/session/logout " method="POST">
+      <button type="submit"> Logout </button>
 </form>

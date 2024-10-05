@@ -1,7 +1,7 @@
 import UsuarioModel from "../models/usuarios.model.js";
 
 class UserDao {
-    async finById(id) {
+    async findById(id) {
         return await UsuarioModel.findById(id);
     }
     async findOne(query) {

@@ -27,10 +27,10 @@ const usuarioSchema = new mongoose.Schema({
         required: true
     },
     //carId: {crearCarrito},
-    rol: { 
+    role: { 
         type: String,
-        enum: ["admin","user"],
-        default: "user"
+        enum: ["admin","usuario"],
+        default: "usuario"
     }
 })
 
