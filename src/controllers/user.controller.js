@@ -13,7 +13,7 @@ class UserController {
                 usuario: `${nuevoUsuario.first_name} ${nuevoUsuario.last_name}`,
                 email: nuevoUsuario.email,
                 role: nuevoUsuario.role
-            }, process.env.JWT_SECRET, {expiresIn: "1h"});
+            }, "codehouse", {expiresIn: "1h"});
 
             res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});
             res.redirect("/api/session/current");
@@ -34,7 +34,7 @@ class UserController {
                 usuario: `${user.first_name} ${user.last_name}`,  
                 email: user.email,  
                 role: user.role  
-            }, process.env.JWT.SECRET, { expiresIn: "1h" });  
+            }, "coderhouse", { expiresIn: "1h" });  
     
             res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});  
             res.redirect("/api/session/current");  

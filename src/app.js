@@ -11,6 +11,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import "./database.js";
 import mongoose from "mongoose";
+import Ticket from "./models/tickets.model.js";
 
 const app = express();
 const PUERTO = 8080;
@@ -21,7 +22,7 @@ app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
 //MIDDLEWARE
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("./src/public"));
 app.use(cookieParser());
@@ -35,7 +36,26 @@ app.use(session({
     }),
 }));
 
-// cambios con passport:
+mongoose.connect( "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/Login?retryWrites=true&w=majority&appName=Cluster0", { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(async () => {
+        console.log("Conectado a MongoDB");
+
+        const nuevoTicket = new Ticket({
+            amount: 100.00,
+            purchaser: 'usuario@example.com'
+        });
+        try {
+
+            const ticketGuardado = await nuevoTicket.save();
+            console.log("Ticket guardado:", ticketGuardado);
+        } catch (error) {
+            console.error("Error al guardar el ticket:", error);
+        }
+
+    })
+    .catch(err => console.error('No se pudo conectar a MongoDB', err));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 initializePassport();
@@ -45,12 +65,12 @@ initializePassport();
 app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
 app.use("/api/products", productsRouter);
-app.use("/carts", cartsRouter);
+app.use("/api/carts", cartsRouter);
 //Error 
-app.use((err, req, res, next) => {  
-    console.error(err.stack);  
-    res.status(500).send('Algo salió mal!');  
-});  
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo salió mal!');
+});
 app.listen(PUERTO, () => {
-    console.log(`Escuchando en el puerto ${PUERTO}`); 
+    console.log(`Escuchando en el puerto ${PUERTO}`);
 })

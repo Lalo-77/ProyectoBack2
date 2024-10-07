@@ -26,7 +26,10 @@ const usuarioSchema = new mongoose.Schema({
         type: Number, 
         required: true
     },
-    //carId: {crearCarrito},
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Carts"
+    },
     role: { 
         type: String,
         enum: ["admin","usuario"],

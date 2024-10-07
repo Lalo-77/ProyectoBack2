@@ -8,7 +8,7 @@ const PM = new productManager(_dirname +"dao/database/products.json");
 
 const router = Router();
 
-router.get("/productos", passport.authenticate("jwt", { session: false }), soloUser, async (req, res) => {
+router.get("/products", passport.authenticate("jwt", { session: false }), soloUser, async (req, res) => {
     try {
         const listadeproductos = await PM.getProducts();
        
@@ -19,7 +19,16 @@ router.get("/productos", passport.authenticate("jwt", { session: false }), soloU
     }
 });
 
-router.get("/realTimeProducts", passport.authenticate("jwt",{session: false}),soloAdmin, (req, res) => {
+router.get("/login", (req, res) => {
+    res.render("login");
+})
+router.get("/register", (req, res) => {
+    res.render("register");
+})
+router.get("/profile", (req, res)=> {
+    res.render("profile");
+})
+router.get("/realTimeProducts", passport.authenticate("jwt",{session: false}), soloAdmin, (req, res) => {
     res.render("realTimeProducts");
 })
 

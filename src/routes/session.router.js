@@ -23,11 +23,6 @@ passport.deserializeUser(async (id, done) => {
     }  
 })
 
-/*router.get('/login', (req, res) => {  
-    console.log('Accediendo a la ruta /login'); // 
-    res.render('login'); 
-});*/ 
-
 // login/registro a partir de GitHub
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
 
