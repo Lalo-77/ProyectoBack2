@@ -1,6 +1,6 @@
 import fs from "fs";  
 
-class ProductManager {  
+class ProductsManager {  
     constructor(path) {  
         this.path = path; // Ruta para el almacenamiento de archivos  
         this.products = [];  
@@ -8,24 +8,31 @@ class ProductManager {
         this.loadProducts(); // Cargar productos desde el archivo en la inicialización  
     }  
 
-    // Obtener todos los productos  
-    getProducts = async (info = {}) => { // Establece un objeto vacío por defecto    
-        const { limit } = info;  
-        if (limit) {  
-            return this.products.slice(0, parseInt(limit));  
-        } else {  
-            return this.products;  
-        }  
-    };  
-
-    // Cargar productos desde el archivo   
-    loadProducts() {  
+     // Cargar productos desde el archivo   
+     loadProducts() {  
         if (fs.existsSync(this.path)) {  
             const data = fs.readFileSync(this.path, 'utf-8');  
             this.products = JSON.parse(data);  
             this.codeId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 0; // Asigna nuevo ID  
         }  
     }  
+
+    // Obtener todos los productos  
+    getProducts = async (limit) => { 
+        try {
+            let productList = this.products;
+
+            if (limit) {  
+                productList =productList.slice(0, parseInt(limit));
+
+        } 
+            return productList
+        } catch (error) {
+            console.error("Error al cargar los productos");
+            throw new Error("Error en getProducts" + error.message);  
+
+        }  
+    };  
 
     // Agregar un producto  
     async addProduct(title, description, stock, thumbnail, category, price, code) {  
@@ -97,4 +104,4 @@ class ProductManager {
     }  
 }  
 
-export default ProductManager;
+export default ProductsManager;

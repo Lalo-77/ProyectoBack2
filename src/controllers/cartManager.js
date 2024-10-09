@@ -7,7 +7,7 @@ class CartManager {
             await nuevoCarrito.save();
             return nuevoCarrito;
         } catch (error) {
-            console.log("Error al crear el nuevo carrinho de compriñas");
+            console.log("Error al crear el nuevo carrito de compras");
         }
     }
 

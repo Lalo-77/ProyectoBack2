@@ -2,9 +2,9 @@ import { Router } from "express";
 import passport from "passport";
 import _dirname from "../varios.js";
 import { soloAdmin, soloUser } from "../middlewares/auth.js";
-import productManager from "../controllers/productManager.js";
+import ProductsManager from "../controllers/ProductsManager.js";
 
-const PM = new productManager(_dirname +"dao/database/products.json");
+const PM = new ProductsManager(_dirname +"dao/database/products.json");
 
 const router = Router();
 

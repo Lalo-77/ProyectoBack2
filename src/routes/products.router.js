@@ -1,6 +1,6 @@
 import { Router } from "express";
-import ProductManager from "../controllers/productManager.js";
-const productManager = new ProductManager();
+import ProductsManager from "../controllers/ProductsManager.js";
+const productsManager = new ProductsManager();
 
 const router = Router();
 
@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   try {
       const { limit = 10, page = 1, sort, query } = req.query;
 
-      const productos = await productManager.getProducts({
+      const productos = await productsManager.getProducts({
           limit: parseInt(limit),
           page: parseInt(page),
           sort,
@@ -41,7 +41,7 @@ router.get("/:pid", async (req, res) => {
   const id = req.params.pid;
 
   try {
-      const producto = await productManager.getProductById(id);
+      const producto = await productsManager.getProductById(id);
       if (!producto) {
           return res.json({
               error: "Producto no encontrado"
@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
   const nuevoProducto = req.body;
 
   try {
-      await productManager.addProduct(nuevoProducto);
+      await addProduct(nuevoProducto);
       res.status(201).json({
           message: "Producto agregado exitosamente"
       });
@@ -78,7 +78,7 @@ router.put("/:pid", async (req, res) => {
   const productoActualizado = req.body;
 
   try {
-      await productManager.updateProduct(id, productoActualizado);
+      await ProductsManager.updateProduct(id, productoActualizado);
       res.json({
           message: "Producto actualizado exitosamente"
       });
@@ -94,7 +94,7 @@ router.delete("/:pid", async (req, res) => {
   const id = req.params.pid;
 
   try {
-      await productManager.deleteProduct(id);
+      await ProductsManager.deleteProduct(id);
       res.json({
           message: "Producto eliminado exitosamente"
       });
@@ -107,7 +107,7 @@ router.delete("/:pid", async (req, res) => {
   router.post("products", (req, res) => {
     try {
       const {title, description, price, thumbnail, code, stock} =  req.body;
-      productManager.addProduct(title, description, price, thumbnail, code, stock);
+      ProductsManager.addProduct(title, description, price, thumbnail, code, stock);
       res.status(201).send({ message: "Producto agregado con exito" });
     } catch (error) {
       res.status(400).send({ error: error.message});
