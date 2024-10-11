@@ -2,16 +2,17 @@ import { Router } from "express";
 import passport from "passport";
 import _dirname from "../varios.js";
 import { soloAdmin, soloUser } from "../middlewares/auth.js";
-import ProductsManager from "../controllers/ProductsManager.js";
+import ProductManager from "../controllers/ProductManager.js";
 
-const PM = new ProductsManager(_dirname +"dao/database/products.json");
+const PM = new ProductManager(_dirname +"/dao/database/products.json");  
 
 const router = Router();
 
-router.get("/products", passport.authenticate("jwt", { session: false }), soloUser, async (req, res) => {
+router.get("/", passport.authenticate("jwt", { session: false }), soloUser,async (req, res) => {
     try {
         const listadeproductos = await PM.getProducts();
-       
+console.log("listadeproductos", listadeproductos);
+
         res.render("home", { listadeproductos });
     } catch (error) {
         console.error("Error en cargar los productos:", error);

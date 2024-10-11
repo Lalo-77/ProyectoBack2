@@ -1,11 +1,14 @@
-import UserRepository from "../repositories/user.repository.js";
+import UserRepository from "../repositories/User.Repository.js";
 import { createHash, isValidPassword } from "../utils/utils.js";
-import CartRepository from "../repositories/cart.repository.js";
+import CartRepository from "../repositories/Cart.Repository.js";
 
 class UserService {
     async registerUser(userData) {
         const existeUsuario = await UserRepository.getUserByEmail(userData.email);
-
+        userData.password = createHash(userData.password);
+         
+        return await UserRepository.createUser(userData);
+        
         if (existeUsuario) throw new Error("El usuario ya existe");
         // CARRITO
 

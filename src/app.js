@@ -11,20 +11,26 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import "./database.js";
 import mongoose from "mongoose";
+import socketProducts from "./listeners/socketProducts.js";
 import Ticket from "./models/tickets.model.js";
+import __dirname from "./varios.js";
+import { Server } from "socket.io";
+import path from "path";
 
 const app = express();
 const PUERTO = 8080;
 
+app.use(express.static(__dirname + "/public"));
+
 //Express-Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", "./src/views");
+app.set("views", path.join(__dirname, "views")); 
 
 //MIDDLEWARE
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("./src/public"));
+app.use(express.static(__dirname + "public"));
 app.use(cookieParser());
 
 app.use(session({
@@ -66,11 +72,22 @@ app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+
 //Error 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');
 });
-app.listen(PUERTO, () => {
-    console.log(`Escuchando en el puerto ${PUERTO}`);
+
+const httpServer = app.listen(PUERTO, () => {
+    try {
+        console.log(`Escuchando en el puerto ${PUERTO}`);
+    } catch (error) {
+        console.log(error);
+        
+    }
 })
+
+const socketServer = new Server(httpServer);
+
+socketProducts(socketServer);
