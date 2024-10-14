@@ -16,6 +16,7 @@ import Ticket from "./models/tickets.model.js";
 import __dirname from "./varios.js";
 import { Server } from "socket.io";
 import path from "path";
+import authRoutes from "./routes/auth.router.js";
 
 const app = express();
 const PUERTO = 8080;
@@ -72,6 +73,7 @@ app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/session", authRoutes);
 
 //Error 
 app.use((err, req, res, next) => {

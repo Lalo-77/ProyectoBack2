@@ -60,27 +60,30 @@ const initializePassport = () => {
         done(null, usuario);
     })
     ////////////////////////////////////////////////////////////////////////////////77
-    //Autenticacion por terceros
-
-    passport.use("github", new GitHubStrategy({
-        clientID: "Iv23liAwCzNvdER11HtZ",
-        clientSecret: "99dc45883470a03aecccf0f7187ac68700e470bb",
-        callbackURL: "http://localhost:8080/api/session/githubcallback",
-    }, async (accessToken, refreshToken, profile, done) => {
-        try {
-            let usuario = await UserModel.findOne({ githubId: profile.id });
-            if (!usuario) {
-                usuario = await UserModel.create({
-                    githubId: profile.id,
-                    email: profile._json.email,
-                });
-            }
-            return done(null, usuario);
-        } catch (error) {
-            return done(error);
+    
+//Autenticacion por terceros
+    
+passport.use("github", new GitHubStrategy({
+    clientID: "Iv23liAwCzNvdER11HtZ",
+    clientSecret: "99dc45883470a03aecccf0f7187ac68700e470bb",
+    callbackURL: "http://localhost:8080/api/session/githubcallback",
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        let usuario = await UserModel.findOne({ githubId: profile.id });
+        if (!usuario) {
+            usuario = await UserModel.create({
+                githubId: profile.id,
+                email: profile._json.email,
+            });
         }
-    }));
+        return done(null, usuario);
+    } catch (error) {
+        return done(error);
+    }
+
+}));
 
 }
+
 
 export default initializePassport;
