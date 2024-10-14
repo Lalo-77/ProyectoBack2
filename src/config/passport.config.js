@@ -63,7 +63,7 @@ const initializePassport = () => {
     //Autenticacion por terceros
 
     passport.use("github", new GitHubStrategy({
-        clienID: "Iv23liAwCzNvdER11HtZ",
+        clientID: "Iv23liAwCzNvdER11HtZ",
         clientSecret: "99dc45883470a03aecccf0f7187ac68700e470bb",
         callbackURL: "http://localhost:8080/api/session/githubcallback",
     }, async (accessToken, refreshToken, profile, done) => {

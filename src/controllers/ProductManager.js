@@ -30,7 +30,7 @@ class ProductsManager {
                 this.products = JSON.parse(data);  
             } catch (error) {  
                 console.error("Error al parsear JSON:", error);  
-                this.products = []; // Inicializar como vacío si hay un error  
+                this.products = []; 
             }  
             this.codeId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 0; // Asigna nuevo ID  
         }  
