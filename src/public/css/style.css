@@ -67,3 +67,7 @@ button {
 button:hover {
     background-color:burlywood;
 }
+.carrito{
+    text-decoration: none;
+    font-size: 30px;
+}
