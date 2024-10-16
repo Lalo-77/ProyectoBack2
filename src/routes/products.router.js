@@ -1,41 +1,46 @@
 import { Router } from "express";
 import ProductsManager from "../controllers/ProductManager.js";
-const productsManager = new ProductsManager();
+import productModel from "../models/product.model.js";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  try {
-      const { limit = 10, page = 1, sort, query } = req.query;
+const productsManager = new ProductsManager();
 
-      const productos = await productsManager.getProducts({
-          limit: parseInt(limit),
-          page: parseInt(page),
-          sort,
-          query,
-      });
+router.get("/", async (req, res) => {  
+    const { limit = 10, page = 1, query = '', sort } = req.query;  
 
-      res.json({
-          status: 'success',
-          payload: productos,
-          totalPages: productos.totalPages,
-          prevPage: productos.prevPage,
-          nextPage: productos.nextPage,
-          page: productos.page,
-          hasPrevPage: productos.hasPrevPage,
-          hasNextPage: productos.hasNextPage,
-          prevLink: productos.hasPrevPage ? `/api/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}` : null,
-          nextLink: productos.hasNextPage ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}` : null,
-      });
+    const options = {  
+        page: parseInt(page),  
+        limit: parseInt(limit),  
+        sort: sort === 'desc' ? { precio: -1 } : (sort === "asc" ? { precio: 1 } : {}),
+    };  
 
-  } catch (error) {
-      console.error("Error al obtener productos", error);
-      res.status(500).json({
-          status: 'error',
-          error: "Error interno del servidor"
-      });
-  }
-});
+    let filter = {};  
+    if (query) {  
+        filter.category = query;  
+    }  
+
+    try {  
+        const result = await productModel.paginate(filter, options);  
+
+        res.json({  
+            status: 'success',  
+            payload: result.docs,  
+            totalPages: result.totalPages,  
+            prevPage: result.prevPage,  
+            nextPage: result.nextPage,  
+            page: result.page,  
+            hasPrevPage: result.hasPrevPage,  
+            hasNextPage: result.hasNextPage,  
+            prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}&sort=${sort || ''}&query=${query}` : null,  
+            nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}&sort=${sort || ''}&query=${query}` : null,  
+        });  
+
+    } catch (error) {  
+        console.error("Error al obtener productos", error);  
+        res.status(500).json({ status: 'error', message: error.message });  
+    }  
+});  
 
 router.get("/:pid", async (req, res) => {
   const id = req.params.pid;
@@ -57,20 +62,18 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const nuevoProducto = req.body;
+router.post("/", async (req, res) => {  
+    const nuevoProducto = req.body;  
 
-  try {
-      await addProduct(nuevoProducto);
-      res.status(201).json({
-          message: "Producto agregado exitosamente"
-      });
-  } catch (error) {
-      console.error("Error al agregar producto", error);
-      res.status(500).json({
-          error: "Error interno del servidor"
-      });
-  }
+    try {  
+        await productsManager.addProduct(nuevoProducto);  
+        res.status(201).json({  
+            message: "Producto agregado exitosamente"  
+        });  
+    } catch (error) {  
+        console.error("Error al agregar producto", error);  
+        res.status(500).json({ error: "Error interno del servidor" });  
+    }  
 });
 
 router.put("/:pid", async (req, res) => {

@@ -37,7 +37,7 @@ class UserController {
             }, "coderhouse", { expiresIn: "1h" });  
     
             res.cookie("coderCookieToken", token, {maxAge: 3600000, httpOnly: true});  
-            res.redirect("/api/session/home");  
+            res.redirect("/api/session/current");  
 
         } catch (error) {  
             return res.status(500).send("Error del server");  
