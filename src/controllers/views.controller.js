@@ -23,6 +23,7 @@ class ViewsController {
                 }
             });
         } catch (error) {
+            console.error("Error fetching products:", error); 
             res.status(500).render('error', { message: error.message });
         }
     }

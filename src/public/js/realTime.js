@@ -1,12 +1,22 @@
 const socket = io(); 
-//cliente
+////////////////////////////////////CLIENTE//////////////////////////////////////////
 
 socket.on("enviodeproductos", (obj) => {
-  uppdateProductList(obj)
+  if (Array.isArray(obj)) {
+    uppdateProductList(obj);
+  } else {
+        console.error("Se esperaba un array, pero se reccibo:", obj);
+  }
 })
+
 function uppdateProductList(productList) {
 
   const productosHome = document.getElementById("list-products")
+
+  if (!Array.isArray(productList)) {
+    console.error("productList no es un array:", productList);
+    return ;
+  }
 
   let productosHTML = "";
 

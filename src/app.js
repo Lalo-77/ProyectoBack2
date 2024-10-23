@@ -55,13 +55,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 app.use("/api/session", sessionRouter);
-app.use("/api/session", authRoutes);
-
-//Error 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Algo salió mal!');
-});
+app.use("/api/session/auth", authRoutes);
 
 mongoose.connect( "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/Login?retryWrites=true&w=majority&appName=Cluster0", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(async () => {
@@ -90,6 +84,12 @@ mongoose.connect( "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net
             
         }
     })
+
+    //Error 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send({message: "Ocurrio un error en el servidor. Detalles:" + err.mensage});
+});
 
 const socketServer = new Server(httpServer);
 
