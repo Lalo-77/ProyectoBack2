@@ -1,4 +1,4 @@
-export function soloAdmin(req, res, next) {
+export function Admin(req, res, next) {
     if(req.user && req.user.role === "admin") {
         next();
     } else {
@@ -6,7 +6,7 @@ export function soloAdmin(req, res, next) {
     }
 }
 
-export function soloUser(req, res, next) {
+export function User(req, res, next) {
     if(req.user && req.user.role === "user")  {
         next();
     } else {

@@ -13,35 +13,55 @@ import "./database.js";
 import mongoose from "mongoose";
 import socketProducts from "./listeners/socketProducts.js";
 import Ticket from "./models/tickets.model.js";
-import __dirname from "./varios.js";
+import __dirname  from "./varios.js";
 import { Server } from "socket.io";
 import path from "path";
 import authRoutes from "./routes/auth.router.js";
+import config from "./config/config.js";
+import jwt from "jsonwebtoken"
+import ProductsManager from "./controllers/ProductsManager.js";
 
 const app = express();
 const PUERTO = 8080;
 
-app.use(express.static(__dirname + "/public"));
-
-//Express-Handlebars
-app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
-app.set("views", path.join(__dirname, "views")); 
 
 //MIDDLEWARE
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(__dirname + "public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
 
 app.use(session({
-    secret: "secretCoder",
-    resave: true,
-    saveUninitialized: true,
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/Login?retryWrites=true&w=majority&appName=Cluster0",
     }),
 }));
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Express-Handlebars
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", path.join(__dirname,"views")); 
+
+//RUTAS
+
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/", viewsRouter);
+app.use("/api/session", sessionRouter);
+app.use("/api/session", authRoutes);
+
+//Error 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo salió mal!');
+});
 
 mongoose.connect( "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net/Login?retryWrites=true&w=majority&appName=Cluster0", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(async () => {
@@ -62,33 +82,14 @@ mongoose.connect( "mongodb+srv://crisn3682:coderhouse@cluster0.xqijc.mongodb.net
     })
     .catch(err => console.error('No se pudo conectar a MongoDB', err));
 
-
-app.use(passport.initialize());
-app.use(passport.session());
-initializePassport();
-
-//RUTAS
-
-app.use("/", viewsRouter);
-app.use("/api/session", sessionRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/api/session", authRoutes);
-
-//Error 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Algo salió mal!');
-});
-
-const httpServer = app.listen(PUERTO, () => {
-    try {
-        console.log(`Escuchando en el puerto ${PUERTO}`);
-    } catch (error) {
-        console.log(error);
-        
-    }
-})
+    const httpServer = app.listen(PUERTO, () => {
+        try {
+            console.log(`Escuchando en el puerto ${config.port}`);
+        } catch (error) {
+            console.log(error);
+            
+        }
+    })
 
 const socketServer = new Server(httpServer);
 

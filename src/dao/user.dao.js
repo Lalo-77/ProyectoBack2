@@ -1,18 +1,21 @@
 import UsuarioModel from "../models/usuarios.model.js";
 
-class UserDao {
-    async findById(id) {
-        return await UsuarioModel.findById(id);
-    }
-    async findOne(query) {
-        return await UsuarioModel.findOne(query);
+class UserDAO {
+    async findUserByEmail(email) {
+        return await UsuarioModel.findOne({ email }).lean();
     }
 
-    async save(userData) {
-        const user = new UsuarioModel(userData);
-        return await user.save();
+    async findUserById(id) {
+        return await UsuarioModel.findById(id).lean();
     }
 
+    async createUser(userData) {
+        const newUser = new UsuarioModel(userData);
+        return await newUser.save();
+    }
+    async updateUser(id, updateData) {
+        return await UsuarioModel.findByIdAndUpdate(id, updateData, { new: true });
+    }
 }
 
-export default new UserDao();
+export default new UserDAO();

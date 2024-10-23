@@ -1,15 +1,10 @@
 import dotenv from "dotenv"; 
 
-const {mode} = program.opts(); 
+dotenv.config(); 
 
-dotenv.config({
-    path: mode === "desarrollo"?"./.env.desarrollo":""
-}); 
-
-const configObject = {
-    PUERTO: process.env.PUERTO, 
-    MONGO_URL: process.env.MONGO_URL
-}
-
-export default configObject; 
-
+export default {
+    mongoUri: process.env.MONGODB_URI,
+    jwtSecret: process.env.JWT_SECRET || "coderhouse",
+    sessionSecret: process.env.SESSION_SECRET || "coderhouse",
+    port: process.env.PORT || 8080
+};

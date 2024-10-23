@@ -1,10 +1,15 @@
-<header>
-    <h1> Mis Productos </h1>
+<div>
+    {{#each docs}}
+    <p>{{this}}</p>
+    {{/each}}
 
-    <div>
-        <p> ¡¡¡ Bienvenido !!!, {{user.first_name}} - {{user.last_name}} </p>
-        <p>Email: {{user.email}} </p>
-        <p> Role: {{user.role}} </p>
-        <a href="/api/session/Logout">Logout</a>
-    </div>
-</header>
+    Pagina: {{page}} / {{totalPages}}
+
+    {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}"><button>Anterior</button></a>
+    {{/if}}
+
+     {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}"><button>Siguiente</button></a>
+    {{/if}}
+</div>

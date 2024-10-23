@@ -1,3 +1,2 @@
-Este es un proyecto de Programacion Backend:  En el que la idea es hacer un comercio de productos y accesorios para autos, los que estaran conectados en una base de datos.
-
-Las herramientas que se usaran es Nodejs, Express,Router, Handlebars,Websockets, Mongodb, mongoose entre otros.
+Este es un proyecto de Programacion Backend:  Es una e-commerce de productos y accesorios para autos, los que estaran conectados en una base de datos en la nube.
+Las herramientas que se usaran es Nodejs, Express, Router, Handlebars,Websockets, Mongodb, Mongoose, Cookies, Sessions, Autenticacion con bcrypt y Jwt, Paspport, Mongo-Connect, Dotenv y Arquitectura por capas entre otros.

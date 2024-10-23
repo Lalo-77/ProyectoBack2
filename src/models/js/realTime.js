@@ -1,5 +1,6 @@
 const socket = io(); 
 //cliente
+
 socket.on("enviodeproductos", (obj) => {
   uppdateProductList(obj)
 })
