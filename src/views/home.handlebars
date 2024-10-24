@@ -6,36 +6,41 @@
         <p>E-mail: {{user.email}} </p>
         <p>Edad: {{user.age}} </p>
         <p>Rol: {{user.role}} </p>
-      <a href="/api/session/logout" >Cerrar Session</a>
+        <a href="/api/session/logout">Cerrar Session</a>
     </div>
 </header>
-<div class="container"></div>
-<h1 class="text-center"></h1>
 
-<div class="row">
-    {{#each listadeproductos}}
-    <div class="col">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <i class=""></i> Code: {{this.code}}
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-white">{{this.title}}</h5>
-                <ul class="list">
-                    <li><i class="bi"></i> ID: {{this.id}}</li>
-                    <li><i class="bi"></i> Description: {{this.description}}</li>
-                    <li><i class="bi bi-currency-dollar"></i> Price: ${{this.price}}</li>
-                    <li><i class="bi bi-grid"></i> Category: {{this.category}}</li>
-                    <li><i class=""></i> Status: {{this.status}}</li>
-                    <li><i class=""></i> Stock: {{this.stock}}</li>
-                    <li>
-                        <i class="image"></i> Image: <img src="{{this.thumbnail}}" alt="{{this.title}}" class="img">
-                    </li>
-                    <br><br>
-                    <a href="/api/session/carts" class="carrito">Comprar</a>
-                </ul>
-            </div>
-        </div>
+<div class="container"></div>
+    <h1> SHOPS CARTS</h1>
+    <ul class="product-list"></ul>
+        {{#each listadeproductos}}
+        <li class="product-item"> 
+            <p><strong>ID:</strong>{{_id}}</p> 
+            <p><strong></i> Description: {{this.description}}</p>
+            <p><strong></i> Price: ${{this.price}}</p>
+            <p><strong></i> Category: {{this.category}}</p>
+            <p><strong></i> Status: {{this.status}}</p>
+            <p><strong></i> Stock: {{this.stock}}</p>
+            <p><strong></i> Image: </strong>{{this.thumbnail}}</p>
+            <form action="/api/carts/:cid/productos/{{_id}}" method="post">
+                <input type="hidden" name="quantity/{{_id}}" value="1">
+                <button type="submit">Agregar al Carrito</button>    
+            </form>           
+        </li>
+        {{else}}
+        <li class="product-item">No hay productos disponibles</li>
+            {{/each}}
+        </ul>
+        <div class="pagination">
+        {{#if hasPrevPage}}
+        <a href="/productos?page={{prevPage}}&limit={{limit}}&sort={{sort}}">Anterior</a>
+        {{/if}}
+
+        <span>Página {{page}} de {{totalPages}}</span>
+
+        {{#if hasNextPage}}
+        <a href="/productos?page={{nextPage}}&limit={{limit}}&sort={{sort}}">Siguiente</a>
+        {{/if}}
     </div>
-    {{/each}}
+
 </div>

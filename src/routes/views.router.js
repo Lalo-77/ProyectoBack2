@@ -4,10 +4,10 @@ import ViewsController from '../controllers/views.controller.js';
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import ProductoController from '../controllers/producto.controller.js';
+import ViewController from "../controllers/views.controller.js";
 import { Admin, User } from '../middlewares/auth.js';
 import  ProductManager from "../controllers/ProductsManager.js";
 import _dirname  from "../varios.js";
-import ProductoService from "../services/producto.service.js";
 
 const router = express.Router();
 
@@ -49,7 +49,7 @@ router.get("/home", authenticateJWT, async (req, res) => {
     }
     });
 
-router.get("/carts/:cid", authenticateJWT, async (req, res) => {
+router.post("/carts/:cid", authenticateJWT, async (req, res) => {
     try {
         const carrito = await CartService.getCarritoById(req.params.cid);
         res.render("carts", { productos: carrito.products, user: req.user });

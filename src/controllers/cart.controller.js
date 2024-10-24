@@ -65,7 +65,7 @@ class CartController {
         }
     }
 
-    async viewCarrito(req, res) {
+    async viewCarrito(req, res) { 
         try {
             const carrito = await CartService.getCarritoById(req.params.cartId);
             res.render('cart', { 
